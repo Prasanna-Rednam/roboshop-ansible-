@@ -25,7 +25,7 @@
   
   - name: print the output
     ansible.builtin.debug:
-      msg: "printing ec2-output: {{ ec2_output | to_nice_json }}"
+      msg: "printing ec2-output: {{ ec2_output }}"
  
      
      
