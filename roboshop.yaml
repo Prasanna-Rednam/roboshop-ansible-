@@ -1,3 +1,4 @@
+# ansible-playbook -i localhost, -e instances=[''] 
 - name: create ec2 and route 53 records
   hosts: all
   connection: local
@@ -69,6 +70,7 @@
     amazon.aws.ec2_instance:
       state: absent
       name: "{{ item }}-{{ env }}"
+      zone: "{{ domain_name }}"
     loop: "{{ instances }}"
     when: action == "destroy"
 
