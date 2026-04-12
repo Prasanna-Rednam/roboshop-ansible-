@@ -19,13 +19,13 @@
         Project: roboshop
         Component: "{{ item }}"
         Environment: "{{ env }}"
-        Name: "{{ item }}-{{ env }}"
+        Name: "{{ item }}-{{ env  }}"
     loop: "{{ instances }}"
     register: ec2_output
   
   - name: print the output
     ansible.builtin.debug:
-      msg: "printing ec2-output: {{ ec2_output }}"
+      msg: "printing ec2-output: {{ ec2_output | to_json }}"
  
      
      
