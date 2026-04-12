@@ -4,6 +4,7 @@
   vars:
     sg_id: sg-01c30fb2c0e9cf7c5
     ami_id: ami-0220d79f3f480ecf5
+    domain_name: paws-88s.online
     env: dev
     instances: 
     - mongodb
