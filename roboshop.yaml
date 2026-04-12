@@ -1,4 +1,4 @@
-# # ansible-playbook -i localhost, \                                                                     -e '{
+#  ansible-playbook -i localhost, \                                                                     -e '{
 #   "instances":[
 #     "mongodb",
 #     "catalogue",
@@ -72,7 +72,7 @@
     - item.item == "frontend"
     - action == "create"
 
-  - name: delete r53 record 
+  - name: delete r53 record frontend
     amazon.aws.route53:
       state: absent
       zone: "{{ domain_name }}"
@@ -83,6 +83,18 @@
       overwrite: true
     loop: "{{ instances }}"
     when: action == "destroy"
+
+  - name: delete r53 record 
+    amazon.aws.route53:
+      state: absent
+      zone: "{{ domain_name }}"
+      record: "{{ item.item }}-{{ env }}.{{ domain_name }}" # roboshop.dev.paw88s.online
+      type: A
+      ttl: 1
+      wait: false
+      overwrite: true
+    loop: "{{ instances }}"
+    when: action == "destroy" 
 
   - name: delete ec2-instance
     amazon.aws.ec2_instance:
