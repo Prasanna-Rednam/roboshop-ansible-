@@ -6,6 +6,7 @@
     ami_id: ami-0220d79f3f480ecf5
     domain_name: paws-88s.online
     env: dev
+    action: create
     instances: 
     - mongodb
     - catlogue
@@ -23,6 +24,7 @@
         Name: "{{ item }}-{{ env  }}"
     loop: "{{ instances }}"
     register: ec2_output
+    when: action == "create"
   
   - name: print the output
     ansible.builtin.debug:
@@ -38,6 +40,7 @@
       value: "{{ item.instances[0].private_ip_address }}"
       wait: true
     loop: "{{ ec2_output.results }}"
+    when: action == "create"
 
   - name: create r53 record frontend
     amazon.aws.route53:
@@ -49,7 +52,27 @@
       value: "{{ item.instances[0].public_ip_address }}"
       wait: true
     loop: "{{ ec2_output.results }}"
-    when: item.item == "frontend"
+    when: 
+    - item.item == "frontend"
+    - action == "create"
+
+  - name: delete r53 record 
+    amazon.aws.route53:
+      state: absent
+      record: "roboshop-{{ env }}.{{ domain_name }}" # roboshop.dev.paw88s.online
+      type: A
+      ttl: 1
+    loop: "{{ instances }}"
+    when: action == "destroy"
+
+  - name: delete ec2-instance
+    amazon.aws.ec2_instance:
+      state: absent
+      name: "{{ item }}-{{ env }}"
+    loop: "{{ instances }}"
+    when: action == "destroy"
+
+
       
      
       
