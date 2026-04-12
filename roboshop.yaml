@@ -2,12 +2,12 @@
   hosts: all
   connection: all
   vars:
-  sg_id: sg-01c30fb2c0e9cf7c5
-  ami_id: ami-0220d79f3f480ecf5
-  environment: dev
-  instances: 
-  - mongodb
-  - catlogue
+    sg_id: sg-01c30fb2c0e9cf7c5
+    ami_id: ami-0220d79f3f480ecf5
+    environment: dev
+    instances: 
+    - mongodb
+    - catlogue
   tasks: 
   - name: create ec2 instance
     amazon.aws.ec2_instance:
