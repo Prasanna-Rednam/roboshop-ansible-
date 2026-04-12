@@ -1,0 +1,32 @@
+- name: create ec2 and route 53 records
+  hosts: all
+  connection: all
+  vars:
+  sg_id: sg-01c30fb2c0e9cf7c5
+  ami_id: ami-0220d79f3f480ecf5
+  environment: dev
+  instances: 
+  - mongodb
+  - catlogue
+  tasks: 
+  - name: create ec2 instance
+    amazon.aws.ec2_instance:
+      instance_type: "t3.micro"
+      security_group: "{{ sg_id }}"
+      image_id: "{{ ami_id }}"
+      name: "{{ item }}-{{ environment }}"
+      tags:
+        Project: roboshop
+        Component: "{{ item }}"
+        Environment: "{{ environment }}"
+        Name: "{{ item }}-{{ environment }}"
+    looop: "{{ instances }}"
+    register: ec2-output
+  
+  - name: print the output
+    ansible.builtin.debug:
+      msg: "printing ec2-output: {{ ec2-output }}"
+ 
+     
+     
+      
