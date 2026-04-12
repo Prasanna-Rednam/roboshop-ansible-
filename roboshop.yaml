@@ -20,7 +20,7 @@
         Component: "{{ item }}"
         Environment: "{{ environment }}"
         Name: "{{ item }}-{{ environment }}"
-    looop: "{{ instances }}"
+    loop: "{{ instances }}"
     register: ec2-output
   
   - name: print the output
