@@ -1,4 +1,17 @@
-# ansible-playbook -i localhost, -e instances=[''] 
+# # ansible-playbook -i localhost, \                                                                     -e '{
+#   "instances":[
+#     "mongodb",
+#     "catalogue",
+#     "redis",
+#     "user",
+#     "cart",
+#     "mysql",
+#     "shipping",
+#     "rabbitmq",
+#     "payment",
+#     "frontend"
+#   ]
+# }' 
 - name: create ec2 and route 53 records
   hosts: all
   connection: local
@@ -18,6 +31,7 @@
       security_group: "{{ sg_id }}"
       image_id: "{{ ami_id }}"
       name: "{{ item }}-{{ env }}"
+      wait: false
       tags:
         Project: roboshop
         Component: "{{ item }}"
@@ -39,7 +53,8 @@
       type: A
       ttl: 1
       value: "{{ item.instances[0].private_ip_address }}"
-      wait: true
+      wait: false
+      overwrite: true
     loop: "{{ ec2_output.results }}"
     when: action == "create"
 
@@ -64,6 +79,8 @@
       record: "roboshop-{{ env }}.{{ domain_name }}" # roboshop.dev.paw88s.online
       type: A
       ttl: 1
+      wait: false
+      overwrite: true
     loop: "{{ instances }}"
     when: action == "destroy"
 
