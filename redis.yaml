@@ -7,10 +7,10 @@
 
   - name: install redis
     ansible.builtin.dnf:
-      name: redis
+      name: redis 
       state: present
-    
-  - name: allow remote connection 
+
+  - name: allow remote connections
     ansible.builtin.replace:
       path: /etc/redis/redis.conf
       regexp: '127.0.0.1'
