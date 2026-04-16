@@ -86,7 +86,7 @@
 
   - name: unmask payment service
     ansible.builtin.systemd_service:
-      name: payment
+      name: shipping
       masked: false
 
   - name: start and enable shipping
