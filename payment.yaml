@@ -1,17 +1,17 @@
 - name: configure payment server
   hosts: payment
   become: yes
-  tasks: 
-  - name: install python 
+  tasks:
+  - name: install python
     ansible.builtin.dnf:
       name: "{{ item }}"
       state: present
     loop:
-    - python3
-    - gcc
+    - python3 
+    - gcc 
     - python3-devel
 
-    - name: create system user roboshop
+  - name: create system user roboshop
     ansible.builtin.user:
       name: roboshop
       system: true
@@ -45,27 +45,24 @@
       dest: /app
       remote_src: yes
 
-  - name: install dependencies
+  - name: install dependencie
     ansible.builtin.pip:
-      requirements: requirments.txt
+      requirements: requirements.txt
       executable: pip3.9
-    args: 
+    args:
       chdir: /app
 
   - name: copy payment service
     ansible.builtin.template:
       src: payment.service
       dest: /etc/systemd/system/payment.service
-  
+
   - name: daemon reload
     ansible.builtin.systemd_service:
       daemon_reload: true
 
-
   - name: start enable payment
     ansible.builtin.service:
       name: payment
-      state: restarted 
+      state: restarted
       enabled: yes
-
-  
