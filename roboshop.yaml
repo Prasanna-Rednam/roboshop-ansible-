@@ -1,17 +1,4 @@
-#  ansible-playbook -i localhost, \                                                                     -e '{
-#   "instances":[
-#     "mongodb",
-#     "catalogue",
-#     "redis",
-#     "user",
-#     "cart",
-#     "mysql",
-#     "shipping",
-#     "rabbitmq",
-#     "payment",
-#     "frontend"
-#   ]
-# }' 
+# ansible-playbook -i localhost, -e '{"instances":["mongodb","catalogue","redis","user","cart","mysql","shipping","rabbitmq","payment","frontend"]}' roboshop.yaml
 - name: create ec2 and route 53 records
   hosts: all
   connection: local
@@ -58,19 +45,21 @@
     loop: "{{ ec2_output.results }}" # list
     when: action == "create"
 
-  - name: create r53 record frontend
+  - name: create r53 record for frontend
     amazon.aws.route53:
       state: present
       zone: "{{ domain_name }}"
-      record: "roboshop-{{ env }}.{{ domain_name }}" # roboshop.dev.paw88s.online
+      record: "roboshop-{{ env }}.{{ domain_name }}" # roboshop-dev.daws88s.online
       type: A
       ttl: 1
       value: "{{ item.instances[0].public_ip_address }}"
-      wait: true
+      wait: false
+      overwrite: true
     loop: "{{ ec2_output.results }}"
-    when: 
+    when:  # and
     - item.item == "frontend"
     - action == "create"
+
 
    ### DESTROY ###
   - name: delete r53 records for frontend
