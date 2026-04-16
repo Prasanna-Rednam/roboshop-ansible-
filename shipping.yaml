@@ -84,6 +84,11 @@
     - /app/db/app-user.sql 
     - /app/db/master-data.sql
 
+  - name: unmask payment service
+    ansible.builtin.systemd_service:
+      name: payment
+      masked: false
+
   - name: start and enable shipping
     ansible.builtin.service:
       name: shipping
